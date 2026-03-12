@@ -1,0 +1,114 @@
+There are 3 major families or we can say distros of linux 
+1)Debian -> ubuntu -> linux mint
+2)fedora -> RHEL -> centos and oracle linux
+3)suse -> sles -> opensuse
+
+bootup sequence of linux 
+1)Bios does post
+2)in hdd or sdd there is MBR/UEFI which contains bootloader GRUB/ISOLINUX etc.
+till this stage no mass media storage is accessed but data from CMOS is taken regarding date,time etc
+booting is performed which will load kernel image and initial RAM disk containg drivers and etc into memory
+3)the initrmafs filesystem is a temporary fs used during boot as the main root filesystem is present on disk and it cannot be directly fetched so this fs contains basic programs,scripts, kernel modules (drivers)
+the udev system decides which drivers are required for attached hw and creates device nodes
+4)after this root fs gets visible if mount prog gets executed properly initramfs is then unloaded from the ram and init program on root fs is executed
+5)at the end of boot process there are number of text mode login prompts which are started
+the default comm. shell is bash (the GNU Bourne Again SHell)
+
+kernel,init and services
+1)the kernel image loaded into RAM gets execcuted which initializes all hw attached
+2)after kernel completion sbin/init runs it then become intial process to many other process
+kernel process is exception. init is responsible for keeping sys running and shutting down 
+3)initially startup was done in serial manner i.e. each stage required completion before next could proceed so systemd was adopted later 
+sbin/init points to systemd it provides aggressive parallel tecniques .systemd knows dependencies .it starts services only when their requirements are met while independent services run at the same time systemctl is a systemd command
+
+Linux Basics
+1)linux filesystems -method of storing and accessing files 
+2)all linux systems follow linux filesystem hierarchy standard it helps developers to move between diff distros without having to re learn the organisation of system
+3) / is the root directory of fsh
+
+graphical interface
+1)there can 2 interface which we can choose on to operate linux GUI and CLI
+GUI is easy in navigation and for newbies. CLI is more effecient for repetitive tasks
+2)x window system provides base for GUI we can move windows, click the options etc with this
+x server is responsible for managing mouse and keyboard it is called server because it not only provides output t local monitor but also a different system somewhere else on network 
+window manager job is to customise how the windows look and how they behave
+desktop environment leverages output of window manager and adds tools and utils to make gui useful. ties all the components of gui.
+
+command line operations
+3 basic elements of command line command,options,arguments
+2)virtual terminals - console sessions which use only display and keyboard. they are diff from command line terminal. there are many vt present but only 1 is visible at a time
+if the GUI freezes or crashes, virtual terminals remain accessible, allowing you to log in and kill faulty processes.
+3)for finding applications we can use $which (app name) or $whereis (app name)
+4)for getting birds eye view for a fs we can use command $tree
+5)pipes - we can pipe the output of one cmd to another as its input through it symbol - " | "
+it is same as pipelining in cpu just implemented at kernel level
+6)The locate utility program performs a search while taking advantage of a previously constructed database of files and directories on your system, matching all entries that contain a specified character string. This can sometimes result in a very long list.
+wildcard for searching - ?(matching any single char) *(Matching any string of char) [___] (match any set of char which are written in brackets )
+To search for files using the wildcard, replace each unknown character with wildcard. For example, if you know only the first two letters are 'ba' of a three-letter filename with an extension of .out, type ls ba?.out.
+7)find - it is diff from locate command because it does not rely on db and also there are many filtering options available for it. administrators sometimes scan for potentially large core files (which contain diagnostic information after a program fails) that are more than several weeks old in order to remove them. manual browsing is inefficient instead find command can be used 
+find gets all the files including subdirectories also while ls only finds for current directory
+8)Packet management system - In every linux family there are 2 kinds of package manager high and low 
+for specifically deb there is apt as high level and dpkg low level 
+what high level i.e. apt do is it checks the repos, finds the correct version, clears out all dependencies and download .deb files 
+now low leve  i.e. dpkg has functionality of installing that files and removing the files and update db
+
+Process
+instance of one or more related tasks(thread) on the computer
+1)types of process - interactive(bash,ff) batch(ipconfig,updatedb) daemons(httpd.sshd process which work on bg indp of user ctrl) threads(lighweight processes) kernel threads(Kernel tasks that users neither start nor terminate and have little control over)
+2)load avg - It shows how much work wanted to run; dividing by core count gives a rough utilization, but high load can also mean I/O blockage, not just CPU saturation.
+3)linux supports bg and fg job processing - fg run directly from shell and while running other needs to wait to access terminal. we can use "&" suffix behind every process and make it run in bg 
+4)processtree - helps in forming a tree diagram showing the relationship between a process and its parent process and any other processes that it created.
+5)cron - it schedules a cmd. once scheduled cmd gets executed even after logout 
+The entry 30 08 10 06 * /home/sysadmin/full-backup will schedule a full-backup at 8.30 a.m., 10-June, irrespective of the day of the week.
+there was a problem that if my pc is powered off during the scheduled time cron wont be able to execute that cmd later. so later anacron was created which will schedule a job for everyday and it provides guaranted execution over periodic execution syntax is 1   10   job-id   /usr/bin/daily-task Meaning:
+run once every day, wait 10 minutes after boot, run if it was missed
+6)steal time - percentage of time a virtual CPU waits for a real CPU while the hypervisor is servicing another virtual processor.Steal time is measured inside a virtual machine.Time when the guest OS wanted to run on a vCPU, but the hypervisor did not schedule it because the physical CPU was busy elsewhere.
+
+File Operations
+1)linux has file mgr named Nautilus it supports linux as well as windows fs it can mount the windows disc which are in pc. there is a special windows network section under that which can be used to get the shared files from a remote server of windows.
+2)proc is a virtual fs because they are created dynamically by kernel when accessed. When a program reads something like /proc/cpuinfo or ps,top,uptime etc, the kernel does not fetch stored file data—instead it collects the current internal kernel data structures and formats them as text on demand.
+3)The /bin directory contains executable binaries, essential commands used to boot the system, and essential commands required by all system users, such as cat, cp, ls, mv, ps, and rm.
+4)The /dev directory contains device nodes, a type of pseudo-file used by most hardware and software devices, except for network devices.They are called pseudo-files because they behave like files but actually represent devices handled by kernel drivers. A file in /dev is just a special entry that points to a device driver inside the kernel.
+5)The /var directory contains files that are expected to change in size and content as the system is running (var stands for variable),System log files: /var/log.Packages and database files: /var/lib
+6)The /etc directory is the home for system configuration files. It contains no binary programs, although there are some executable
+7)The /boot directory contains the few essential files needed to boot the system. For every alternative kernel installed on the system there are four files:vmlinuz - compressed linux kernel img,
+initramfs - used during early boot before root mounted, config - Lists every kernel feature enabled or disabled, system.map - maps kernel function names.
+8)/lib contains libraries (common code shared by applications and needed for them to run) for the essential programs in /bin and /sbin.
+9)removable devices are mounted upon /run and /media dir
+
+text editors
+1)basic - nano,gedit advanced - vi,emacs
+2)echo xyz > file - this will rewrite the file with content as xyz
+echo xyz >> file - this will add xyz to the already present content in file
+another way of writing file w/o text editor is 
+cat << string > file - in place of string we can use any string which will not be used in content and that string will be considered as EOF after entering that string in terminal the file closes 
+3)everything about vi and emacs - didnt find much useful at this stage of learning so ignored 
+
+user environment
+1)run level is a mode in which a linux system operates linux starts with init process which first finds the default runlevel of the system so that it can run the start scripts corresponding to the that run level. run level :- 0 - sys halt, 1 - single user mode, 2 - mult user mode + no nw fs, 3 - mult user mode in CLI but no GUI, 4 - user definable, 5 - def/std run level for linux mult user mode with GUI, 6 - reboot
+to know the runlevel cmd = who -a 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
