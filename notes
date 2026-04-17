@@ -71,7 +71,7 @@ File Operations
 4)The /dev directory contains device nodes, a type of pseudo-file used by most hardware and software devices, except for network devices.They are called pseudo-files because they behave like files but actually represent devices handled by kernel drivers. A file in /dev is just a special entry that points to a device driver inside the kernel.
 5)The /var directory contains files that are expected to change in size and content as the system is running (var stands for variable),System log files: /var/log.Packages and database files: /var/lib
 6)The /etc directory is the home for system configuration files. It contains no binary programs, although there are some executable
-7)The /boot directory contains the few essential files needed to boot the system. For every alternative kernel installed on the system there are four files:vmlinuz - compressed linux kernel img,
+7)The /boot directory contains the few essential files needed to boot the system. For every alternative kernel installed on the system there are four files:vmlinuz - compressed li	nux kernel img,
 initramfs - used during early boot before root mounted, config - Lists every kernel feature enabled or disabled, system.map - maps kernel function names.
 8)/lib contains libraries (common code shared by applications and needed for them to run) for the essential programs in /bin and /sbin.
 9)removable devices are mounted upon /run and /media dir
@@ -87,6 +87,34 @@ cat << string > file - in place of string we can use any string which will not b
 user environment
 1)run level is a mode in which a linux system operates linux starts with init process which first finds the default runlevel of the system so that it can run the start scripts corresponding to the that run level. run level :- 0 - sys halt, 1 - single user mode, 2 - mult user mode + no nw fs, 3 - mult user mode in CLI but no GUI, 4 - user definable, 5 - def/std run level for linux mult user mode with GUI, 6 - reboot
 to know the runlevel cmd = who -a 
+2).bash_profile runs when you log in; .bashrc runs every time a new shell starts.
+3)we can call any existing cmd by custom name by writing this at the end of bashrc file - alias customcmdname = 'existingcmd' eg alias ff = 'firefox'
+4)in linux every usernames have unique UID, and there are grps which represents a collection of users every grp has unique GID. these are used as a key to access file. if UID matches owner - use owner permissions else if GID matches group - use group permissions else - use others permissions
+5)root has permission to read/write/delete any file. to become root for any execution we can write su or sudo. simple difference between su and sudo is sudo(superuser do) runs only one cmd as root then again asks for pwd while su(substitute user) will open a new shell in which every cmd will run as root until we exit the shell. sudo is safer than su
+6)bash keeps track of previously entered commands and statements in a history buffer ~/.bash_history
+to directly execute prv cmd w/o using up/down keys we can use cmd !! it is pronounced as bang bang
+!n n represents cmd no. which you want to execute from history buffer
+7)keyboard shortcuts
+CTRL-L	Clears the screen
+CTRL-S	Temporarily halt output to the terminal window
+CTRL-Q	Resume output to the terminal window
+CTRL-D	Exits the current shell
+CTRL-Z	Puts the current process into suspended background and back to prompt
+CTRL-C	Kills the current process
+CTRL-H	Works the same as backspace
+CTRL-A	Goes to the beginning of the line
+CTRL-W	Deletes the word before the cursor
+CTRL-U	Deletes from beginning of line to cursor position
+CTRL-E	Goes to the end of the line
+Tab	Auto-completes files, directories, and binaries
+8)file ownership 
+every file has 3 permissions rwx, and 3 owners ugo '+'and'-' are used to give or take away permission with this commands chown - change ownership, chgrp - change grp, chmod - change permission
+it can be difficult to remember the syntax so there is another syntax where if the digit is 7 - rwx ,6 - rw ,5 - rx it is basically made up from sum of this no.s 4 - r, 2 - w, 1 -x.
+eg. chmod 755 will mean u-7,g-5,o-5
+
+
+
+
 
 
 
